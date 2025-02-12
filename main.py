@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -46,6 +46,60 @@ def form():
             <input type="text" id="nombre" required>
             '''
 
+@app.route("/operaBas")
+def opera():
+    return render_template("operaBas.html")
+
+@app.route("/resultado", methods=["GET", "POST"])
+def resulttado():
+    if request.method == "POST":
+        num1 = request.form.get("n1")
+        num2 = request.form.get("n2")
+        op = request.form.get("opcion")
+        if op == "suma":
+            resultado = "La suma de {} + {} = {}".format(num1, num2, str(int(num1) + int(num2)))
+            return render_template("operaBas.html", resultado = resultado)
+        if op == "resta":
+            resultado = "La resta de {} - {} = {}".format(num1, num2, str(int(num1) - int(num2)))
+            return render_template("operaBas.html", resultado = resultado)
+        if op == "multiplicacion":
+            resultado = "La multiplicacion de {} X {} = {}".format(num1, num2, str(int(num1) * int(num2)))
+            return render_template("operaBas.html", resultado = resultado)
+        if op == "division":
+            resultado = "La division de {} / {} = {}".format(num1, num2, str(int(num1) / int(num2)))
+            return render_template("operaBas.html", resultado = resultado)
+
+@app.route("/cinepolis")
+def cine():
+    return render_template("cinepolis.html")
+
+@app.route("/cinepolisRes", methods=["POST"])
+def cine_res():
+    nombre = request.form["nombre"]
+    compradores = int(request.form["compradores"])
+    boletos = int(request.form["boletos"])
+    tarjeta = request.form["opcion"] == "cinecosi"
+    precioBoleto = 12
+    boletosPosibles = compradores * 7
+
+    if boletos > boletosPosibles:
+        error = "No puedes comprar más de 7 boletos por persona."
+        return render_template("cinepolis.html", error=error)
+
+    if boletos > 5:
+        descuento = 0.15
+    elif 3 <= boletos <= 5:
+        descuento = 0.10
+    else:
+        descuento = 0
+
+    total_compra = boletos * precioBoleto
+    total_compra -= total_compra * descuento
+
+    if tarjeta:
+        total_compra -= total_compra * 0.10
+
+    return render_template("cinepolis.html", total=total_compra)
 
 if __name__ == "__main__":
     app.run(debug=True, port=3000)
