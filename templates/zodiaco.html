@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block container%}
+{% import "_macros.html" as macros %}
+<style>
+    .recuadro-principal {
+        border: 2px solid black;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin: 20px auto;
+        max-width: 1200px;
+    }
+
+    .recuadro-formulario {
+        border: 2px solid black;
+        background-color: white;
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+    }
+
+    .container-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .formulario {
+        width: 50%;
+    }
+
+    
+    #salida {
+        width: 60%;
+        margin-left: 20px; 
+    }
+
+    #salida h2 {
+        font-size: 2.5em; 
+        margin-bottom: 15px;
+    }
+
+    #salida img {
+        margin-top: 15px; 
+    }
+</style>
+
+<div class="recuadro-principal">
+    <h1>Zodiaco Chino</h1>
+
+    <div class="container-flex">
+        <div class="recuadro-formulario">
+            <form action="" method="post" novalidate class="formulario">
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.campoNuevo(form.nombre, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.campoNuevo(form.apellidoPaterno, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.campoNuevo(form.apellidoMaterno, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.campoNuevo(form.sexo, class="form-control") }}
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                        {{ macros.campoNuevo(form.fecha, class="form-control") }}
+                    </div>
+                </div>
+
+                <input type="submit" value="Guardar" class="btn btn-primary">
+            </form>
+        </div>
+
+        <div id="salida">
+            <h2>Hola: {{ nom }} {{ apePaterno }} {{ apeMaterno }}</h2>
+            <h2>Tienes: {{ edad }} años</h2>
+            <h2>Y tu signo es: {{ signoChino }}</h2>
+            
+            <img src="{{ url_for('static', filename=imagenZ) }}" width="200">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 import forms
+import formszodiaco
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -18,13 +20,40 @@ def alumnos():
     ape=''
     email=''
     alumno_class=forms.UserForm(request.form)
-    if request.method == "POST":
+    if request.method == "POST" and alumno_class.validate():
         mat= alumno_class.matricula.data
         ape= alumno_class.apellido.data
         nom= alumno_class.nombre.data
         email= alumno_class.email.data
         print("Nombre {}".format(nom))
-    return render_template("alumnos.html",form= alumno_class)
+    return render_template("alumnos.html",form= alumno_class, mat=mat, nom=nom, ape=ape, email=email)
+
+@app.route("/zodiaco", methods=["GET", "POST"])
+def zodiaco():
+    nom=''
+    apePaterno=''
+    apeMaterno=''
+    sexo =''
+    fecha=''
+    imagenZ = ''
+    zodiaco_class= formszodiaco.ZodiacoForm(request.form)
+    if request.method == "POST" and zodiaco_class.validate():
+        apePaterno= zodiaco_class.apellidoPaterno.data
+        nom= zodiaco_class.nombre.data
+        sexo= zodiaco_class.sexo.data
+        fecha= zodiaco_class.fecha.data
+        apeMaterno = zodiaco_class.apellidoMaterno.data
+        if fecha:
+            hoy = datetime.today()
+            edad = hoy.year - fecha.year - ((hoy.month, hoy.day) < (fecha.month, fecha.day))
+    añoNacimiento = fecha.year
+    signoZ = [
+                "mono", "gallo", "perro", "cerdo", "rata", "buey", 
+                "tigre", "conejo", "dragon", "serpiente", "caballo", "cabra"
+            ]
+    signoChino = signoZ[añoNacimiento % 12]
+    imagenZ = "img/{}.png".format(signoChino)
+    return render_template("zodiaco.html",form= zodiaco_class, nom=nom, apePaterno=apePaterno, apeMaterno=apeMaterno, sexo=sexo, fecha=fecha, edad=edad, signoChino= signoChino, imagenZ= imagenZ)
 
 @app.route("/ejemplo1")
 def ejemlo1():
